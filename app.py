@@ -24,14 +24,25 @@ def generate_checklist(form):
     result = {}
 
     for category in data["categories"]:
-        rules = category.get("rules", {})
 
-        if rules and not rule_match(rules, form):
+        category_rules = category.get("rules", {})
+
+        if category_rules and not rule_match(category_rules, form):
             continue
 
-        result[category["title"]] = [
-            item["name"] for item in category["items"]
-        ]
+        items_list = []
+
+        for item in category["items"]:
+
+            item_rules = item.get("rules", {})
+
+            if item_rules and not rule_match(item_rules, form):
+                continue
+
+            items_list.append(item["name"])
+
+        if items_list:
+            result[category["title"]] = items_list
 
     return result
 # ------------------------
