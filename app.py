@@ -30,7 +30,7 @@ def generate_checklist(form):
             continue
 
         result[category["title"]] = [
-            item["title"] for item in category["items"]
+            item["name"] for item in category["items"]
         ]
 
     return result
