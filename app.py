@@ -4,11 +4,9 @@ import json
 import os
 from logic.checklist_data import generate_checklist
 
-
+print("HELLO FROM TRIP REPO")
 app = Flask(__name__)
-
-app.secret_key = "1642300Mb"
-  # حتما لازم
+app.secret_key = "1642300Mb"  # حتما لازم
 
 def load_data():
     with open("data.json", encoding="utf-8") as f:
