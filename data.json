@@ -15,7 +15,7 @@
           "default_count": 1,
           "description": "برای سفر خارجی",
           "rules": {
-            "travel_type": ["international"]
+            "travel_type": ["external"]
           }
         },
 		{
@@ -57,6 +57,84 @@
           }
         }
       ]
+    },
+	{
+  "title": "لوازم بهداشتی",
+  "rules": {},
+  "items": [
+    {
+      "name": "مسواک",
+      "default_count": 1,
+      "description": "",
+      "rules": {}
+    },
+    {
+      "name": "خمیر دندان",
+      "default_count": 1,
+      "description": "",
+      "rules": {}
+    },
+    {
+      "name": "شامپو",
+      "default_count": 1,
+      "description": "",
+      "rules": {
+        "stay_type": ["hotel", "villa"]
+      }
     }
+  ]
+},
+{
+  "title": "وسایل الکترونیکی",
+  "rules": {},
+  "items": [
+    {
+      "name": "شارژر موبایل",
+      "default_count": 1,
+      "description": "",
+      "rules": {}
+    },
+    {
+      "name": "پاوربانک",
+      "default_count": 1,
+      "description": "",
+      "rules": {}
+    },
+    {
+      "name": "هدفون",
+      "default_count": 1,
+      "description": "",
+      "rules": {
+        "transport": ["plane", "train"]
+      }
+    }
+  ]
+},
+{
+  "title": "دارو",
+  "rules": {},
+  "items": [
+    {
+      "name": "مسکن",
+      "default_count": 1,
+      "description": "",
+      "rules": {}
+    },
+    {
+      "name": "داروی شخصی",
+      "default_count": 1,
+      "description": "",
+      "rules": {}
+    },
+    {
+      "name": "قرص ضد تهوع",
+      "default_count": 1,
+      "description": "",
+      "rules": {
+        "transport": ["bus", "ship"]
+      }
+    }
+  ]
+}
   ]
 }

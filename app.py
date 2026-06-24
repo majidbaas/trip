@@ -45,6 +45,24 @@ def generate_checklist(form):
             result[category["title"]] = items_list
 
     return result
+    
+    
+def rule_match(rules, form):
+    for key, values in rules.items():
+
+        print(
+            "CHECK:",
+            key,
+            "FORM=",
+            form.get(key),
+            "RULE=",
+            values
+        )
+
+        if form.get(key) not in values:
+            return False
+
+    return True
 # ------------------------
 # صفحه 1: فرم اصلی
 # ------------------------
