@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, session
-from checklist_data import *
+# from checklist_data import *
 import json
 import os
-from logic.checklist_data import generate_checklist
+# from logic.checklist_data import generate_checklist
 
 print("HELLO FROM TRIP REPO")
 app = Flask(__name__)
