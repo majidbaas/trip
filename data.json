@@ -1,0 +1,62 @@
+{
+  "categories": [
+    {
+      "title": "مدارک",
+      "rules": {},
+      "items": [
+        {
+          "name": "کارت ملی",
+          "default_count": 1,
+          "description": "مدرک شناسایی",
+          "rules": {}
+        },
+        {
+          "name": "پاسپورت",
+          "default_count": 1,
+          "description": "برای سفر خارجی",
+          "rules": {
+            "travel_type": ["international"]
+          }
+        },
+		{
+          "name": "مدارک هتل",
+          "default_count": 1,
+          "description": "وچر هتل",
+          "rules": {
+            "hotel_type": ["hotel"]
+          }
+        },
+		{
+          "name": "مدارک خودرو",
+          "default_count": 1,
+          "description": "کارت ماشین و گواهینامه",
+          "rules": {
+            "transport": ["car"]
+          }
+        }
+      ]
+    },
+    {
+      "title": "لباس",
+      "rules": {},
+      "items": [
+        {
+          "name": "کاپشن گرم",
+          "default_count": 1,
+          "description": "برای هوای سرد",
+          "rules": {
+            "season": ["winter"]
+          }
+        },
+        {
+          "name": "لباس خنک",
+          "default_count": 2,
+          "description": "برای تابستان",
+          "rules": {
+            "season": ["summer"]
+          }
+        }
+      ]
+    }
+  ]
+}

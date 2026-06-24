@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  
+<header class="main-header">
+  <div class="page-wrapper">
+   
+    <div class="title">
+      <h1>سامانه ساخت چک لیست سفر 🧾</h1>
+      <span>هوشمند • ساده • قابل چاپ</span>
+    </div>
+  </div>
+</header>
+  
+  <title>نتیجه</title>
+  <link rel="stylesheet" href="/static/style.css">
+  
+  
+  
+</head>
+
+<body>
+<div class="stepper-container">
+  <div class="stepper-wrapper">
+
+    <div class="step">
+      <span class="circle">1</span>
+      <span class="label">فرم</span>
+    </div>
+
+    <span class="connector"></span>
+
+    <div class="step">
+      <span class="circle">2</span>
+      <span class="label">جزئیات</span>
+    </div>
+
+    <span class="connector"></span>
+
+    <div class="step active">
+      <span class="circle">3</span>
+      <span class="label">نتیجه</span>
+    </div>
+
+  </div>
+</div>
+
+  <div class="review-wrapper">
+    <h2>{{ title }}</h2>
+
+    <div class="cards-container"> {# این یک div جدید برای نگهداری کارت‌هاست #}
+      {% for category in categories %}
+        <section class="checklist-category-card"> {# نام کلاس را تغییر دادیم #}
+          <div class="card-header"> {# برای عنوان و شاید آیکون #}
+            <h4>{{ category["title"] }}</h4>
+            {# اینجا می‌توانید آیکون مرتبط با دسته بندی را اضافه کنید #}
+          </div>
+          
+          <ul class="item-list"> {# نام کلاس ul را هم برای استایل دهی بهتر تغییر دادیم #}
+            {% for item in category["items"] %}
+              <li class="checklist-item"> {# نام کلاس li را هم تغییر دادیم #}
+                <label>
+                  <input type="checkbox" class="item-checkbox"> {# کلاس برای استایل چک باکس #}
+                  <span class="item-name">{{ item["name"] }}</span> {# برای استایل نام آیتم #}
+                </label>
+
+                {% if item["description"] %}
+                  <span class="item-description"> – {{ item["description"] }}</span> {# کلاس برای استایل توضیحات #}
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endfor %}
+    </div> {# پایان cards-container #}
+  </div>
+
+    <div class="actions-container"> {# wrapper جدید برای دکمه ها #}
+      <button class="print-btn" onclick="window.print()">چاپ 🖨</button>
+	  <button class="back-link" onclick="location.href='/';"> ⬅ بازگشت</button>
+    </div>
+
+  </div>
+
+
+<script src="/static/script.js"></script>
+<script>
+  window.addEventListener("load", () => {
+    setTimeout(() => setStep(3), 100);
+  });
+</script>
+</body>
+</html>
