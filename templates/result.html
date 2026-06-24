@@ -50,18 +50,36 @@
 
   <div class="review-wrapper">
     <h2>{{ title }}</h2>
+ 
+ 
+<div class="cards-container">
 
-   {% for category, items in checklist.items() %}
+{% for category, items in checklist.items() %}
 
-<h3>{{ category }}</h3>
+<div class="category-card">
 
-<ul>
+    <div class="card-title">
+        {{ category }}
+    </div>
+
+    <ul class="item-list">
+
     {% for item in items %}
-        <li>{{ item }}</li>
+
+        <li class="item-row">
+            <input type="checkbox">
+            <span>{{ item }}</span>
+        </li>
+
     {% endfor %}
-</ul>
+
+    </ul>
+
+</div>
 
 {% endfor %}
+
+</div> 
   </div>
 
     <div class="actions-container"> {# wrapper جدید برای دکمه ها #}
