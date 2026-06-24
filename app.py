@@ -1,72 +1,182 @@
-from flask import Flask, render_template, request, session, redirect
-from logic.checklist import generate_checklist
-from logic.mappings import travel_map, hotel_map, gender_map, transport_map, season_map
-import os
+from flask import Flask, render_template, request, redirect, session
+from checklist_data import *
 import json
+import os
+from logic.checklist_data import generate_checklist
+
 
 app = Flask(__name__)
-app.secret_key = "1642300Mb"
 
-# Cache برای جلوگیری از لود چندباره فایل
-DATA_CACHE = None
+app.secret_key = "1642300Mb"
+  # حتما لازم
 
 def load_data():
-    global DATA_CACHE
-    if DATA_CACHE is None:
-        base = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(base, "data", "data.json")
-        with open(file_path, "r", encoding="utf-8") as f:
-            DATA_CACHE = json.load(f)
-    return DATA_CACHE
+    with open("data.json", encoding="utf-8") as f:
+        return json.load(f)
+        
+def rule_match(rules, form):
+    for key, values in rules.items():
+        if form.get(key) not in values:
+            return False
+    return True
 
 
+def generate_checklist(form):
+    data = load_data()
+    result = {}
+
+    for category in data["categories"]:
+        rules = category.get("rules", {})
+
+        if rules and not rule_match(rules, form):
+            continue
+
+        result[category["title"]] = [
+            item["title"] for item in category["items"]
+        ]
+
+    return result
+# ------------------------
+# صفحه 1: فرم اصلی
+# ------------------------
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         session["form"] = request.form.to_dict()
         return redirect("/review")
+
     return render_template("index.html", form=session.get("form"))
 
 
-@app.route("/review")
+# ------------------------
+# صفحه 2: بررسی اطلاعات
+# ------------------------
+@app.route("/review", methods=["GET"])
 def review():
     form = session.get("form")
     if not form:
         return redirect("/")
 
+    trip_type_map = {
+        "solo": "انفرادی",
+        "family": "خانوادگی"
+    }
+
+    accommodation_map = {
+        "hotel": "هتل",
+        "hostel": "هاستل",
+        "villa": "ویلا",
+        "suite": "سوئیت آپارتمان",
+        "eco": "اقامتگاه بوم‌گردی",
+        "camp": "چادر کمپ",
+        "familyHome": "خانه اقوام"
+    }
+
+    travel_type = form.get("travel_type")
+    hotel_type = form.get("hotel_type")
+
+    trip_type_fa = trip_type_map.get(travel_type, travel_type)
+    accommodation_fa = accommodation_map.get(hotel_type, hotel_type)
+
     return render_template(
         "review.html",
         form=form,
-        travel_type=travel_map.get(form.get("travel_type"), ""),
-        accommodation=hotel_map.get(form.get("hotel_type"), ""),
-        gender=gender_map.get(form.get("gender"), ""),
-        transport=transport_map.get(form.get("transport"), ""),
-        season=season_map.get(form.get("season"), "")
+        trip_type=trip_type_fa,
+        accommodation=accommodation_fa
     )
 
 
-@app.route("/result", methods=["GET", "POST"])
+
+# ------------------------
+# صفحه 3: نتیجه نهایی
+# ------------------------
+@app.route("/result", methods=["POST"])
 def result():
     form = session.get("form")
     if not form:
         return redirect("/")
 
-    # نیاز به data اگر checklist از JSON بخواند
-    data = load_data()
+    travel_type_fa = {
+        "solo": "به‌صورت انفرادی",
+        "family": "به‌همراه خانواده"
+    }
 
-    categories = generate_checklist(form)
+    transport_fa = {
+        "plane": "با هواپیما",
+        "train": "با قطار",
+        "car": "با خودرو",
+        "motor": "با موتور",
+        "bus": "با اتوبوس"
+    }
+
+    season_fa = {
+        "spring": "در بهار",
+        "summer": "در تابستان",
+        "autumn": "در پاییز",
+        "winter": "در زمستان"
+    }
+    trip_type_map = {
+        "solo": "انفرادی",
+        "family": "خانوادگی"
+    }
+
+    accommodation_map = {
+        "hotel": "هتل",
+        "hostel": "هاستل",
+        "villa": "ویلا",
+        "familyHome": "خانه اقوام"
+    }
+   
+    name = form.get("name")
+    travel_type = form.get("travel_type")
+    transport = form.get("transport")
+    season = form.get("season")
+    city_type = form.get("city_type")
+    city = form.get("city_fa")
+     
+    hotel_type = form.get("hotel_type")
+    try:
+       stay_days = int(form.get("stay_days", 1))
+    except:
+        stay_days = 1
+   
+        
+    checklist = generate_checklist(form)
+
+       
 
     title = (
-        f"چک‌لیست سفر {form.get('name')} به {form.get('city_fa')} "
-        f"{travel_map.get(form.get('travel_type'), '')} "
-        f"به مدت {form.get('stay_days')} شب در "
-        f"{hotel_map.get(form.get('hotel_type'), '')} "
-        f"با {transport_map.get(form.get('transport'), '')} "
-        f"در فصل {season_map.get(form.get('season'), '')}"
+        f"چک‌لیست سفر {name} "
+        f"{travel_type_fa.get(travel_type)} "
+        f"{transport_fa.get(transport)} "
+        f"{season_fa.get(season)} "
+        f"به {city} ({stay_days} شب اقامت)"
     )
+    
+    
 
-    return render_template("result.html", categories=categories, title=title)
+    session.pop("form", None)
+
+    for category in checklist:
+        checklist[category] = list(set(checklist[category]))
+  
+
+    return render_template(
+        "result.html",
+        checklist=checklist,
+        title=title,
+       
+        
+    )
+    
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+
+
+# if __name__ == "__main__":
+#    app.run(debug=True)
+    
+if __name__ == '__main__':
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host="0.0.0.0", port=port)
